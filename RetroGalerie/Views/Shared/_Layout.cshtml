@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("gameSearch");
+        const suggestionsBox = document.getElementById("searchSuggestions");
+
+        searchInput.addEventListener("input", function () {
+            const query = this.value;
+            if (query.length < 3) {
+                suggestionsBox.innerHTML = "";
+                return;
+            }
+
+            fetch(`/Games/Autocomplete?term=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsBox.innerHTML = "";
+                    data.forEach(item => {
+                        const option = document.createElement("a");
+                        option.classList.add("list-group-item", "list-group-item-action");
+                        option.textContent = item.title;
+                        option.href = `/Games/Details/${item.id}`;
+                        suggestionsBox.appendChild(option);
+                    });
+                });
+        });
+
+        // Fermer les suggestions si on clique ailleurs
+        document.addEventListener("click", function (e) {
+            if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                suggestionsBox.innerHTML = "";
+            }
+        });
+    });
+
+</script>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RetroGalerie</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Thème Bootswatch -->
+    <link rel="stylesheet" href="~/css/bootstrap.solar.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/RetroGalerie.styles.css" asp-append-version="true" />
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RetroGalerie</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Games" asp-action="Index">Jeux</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Consoles" asp-action="Index">Consoles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                    <!-- recherche de jeux -->
+                    <form class="d-flex me-3 position-relative" asp-controller="Games" asp-action="Search" method="get">
+                        <input id="gameSearch" name="query" class="form-control me-2" type="search"
+                               placeholder="Rechercher un jeu..." aria-label="Search" autocomplete="off" />
+                        <div id="searchSuggestions" class="list-group position-absolute w-100"
+                             style="top:100%; z-index:1050;"></div>
+                    </form>
+
+
+                    <!-- Sélecteur de langue -->
+                    <form id="selectLanguage" asp-controller="Home" asp-action="SetLanguage" method="post" class="d-flex me-3">
+                        <select name="culture" onchange="this.form.submit()" class="form-select form-select-sm">
+                            <option value="fr" selected="@((System.Threading.Thread.CurrentThread.CurrentCulture.Name == "fr"))">🇫🇷 Français</option>
+                            <option value="en" selected="@((System.Threading.Thread.CurrentThread.CurrentCulture.Name == "en"))">🇬🇧 English</option>
+                        </select>
+                        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                    </form>
+
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - RetroGalerie - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

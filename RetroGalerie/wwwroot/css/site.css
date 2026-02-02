@@ -1,0 +1,90 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    color: #f8f9fa; /* texte gris clair */
+    margin-bottom: 60px;
+}
+
+th a span {
+    font-weight: bold;
+    margin-left: 4px;
+    color: #f8f9fa; /* texte clair */
+}
+
+th a:hover span {
+    color: #00ffcc; /* effet néon au survol */
+}
+
+/* Suggestions de recherche */
+#searchSuggestions {
+    background-color: var(--bs-dropdown-bg); /* même fond que les menus déroulants Bootstrap */
+    color: var(--bs-dropdown-color, white); /* couleur du texte des dropdowns */
+    max-height: 300px; /* limite la hauteur */
+    overflow-y: auto; /* scroll si trop de résultats */
+    border-radius: 0.25rem; /* coins arrondis */
+}
+
+#searchSuggestions .list-group-item {
+    background-color: darkgrey; /* même fond que les menus déroulants Bootstrap */
+    color: var(--bs-dropdown-color, white); /* texte cohérent avec les dropdowns */
+    border: none !important; /* supprime les traits internes */
+}
+
+
+#searchSuggestions .list-group-item:hover {
+    background-color: slategrey; /* couleur de survol des dropdowns */
+    color: #00ffcc; /* effet néon turquoise */
+    text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc; /* halo lumineux */
+    }
+
+/* Pour les jaquettes SNES (paysage) */
+.cover-snes {
+    max-width: 450px; /* largeur dominante */
+    max-height: auto; /* hauteur libre */
+    transform: rotate(-90deg);
+    
+}
+/* Pour les jaquettes NES (verticales) */
+.cover-nes {
+    max-height: 600px; /* hauteur dominante */
+    max-width: auto; /* largeur libre */
+}
+
+/* NES : verticales (inchangé) */
+.card-img-nes {
+    max-height: 600px;
+    object-fit: contain;
+}
+
+/* SNES : pivotées paysage */
+.card-img-snes {
+    transform: rotate(-90deg);
+    max-width: 450px; /* plus large */
+    max-height: 300px; /* moins haute */
+    object-fit: contain;
+    margin-top: 0; /* colle en haut de la card */
+    min-height: auto;
+}
+
+

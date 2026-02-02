@@ -1,0 +1,72 @@
+﻿@model RetroGalerie.Models.GameViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="mb-3">
+    @switch (Model.ConsoleName?.Trim().ToUpperInvariant())
+    {
+        case "NES" or "GAME GEAR":
+            <img src="/images/logo/nes-logo.png" alt="NES Logo"
+                 style="height:40px; vertical-align:middle; margin-right:10px;" />
+            break;
+        case "SNES":
+            <img src="/images/logo/snes_logo.png" alt="SNES Logo"
+                 style="height:40px; vertical-align:middle; margin-right:10px;" />
+            break;
+    }
+    @Model.Title
+</h1>
+
+
+
+<hr class="mb-4" /> <!-- Barre horizontale pleine largeur -->
+
+<div class="row">
+    <!-- Colonne gauche : infos textuelles -->
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Description</dt>
+            <dd class="col-sm-8">@Model.Description</dd>
+
+            <dt class="col-sm-4">Année</dt>
+            <dd class="col-sm-8">@Model.YearOfPublication</dd>
+
+            <dt class="col-sm-4">Nombre de joueurs</dt>
+            <dd class="col-sm-8">@Model.NumberOfPlayers</dd>
+
+            <dt class="col-sm-4">Genre</dt>
+            <dd class="col-sm-8">@Model.Genre</dd>
+
+            <dt class="col-sm-4">Développeur</dt>
+            <dd class="col-sm-8">@Model.Developer</dd>
+
+            <dt class="col-sm-4">Éditeur</dt>
+            <dd class="col-sm-8">@Model.Publisher</dd>
+
+            <dt class="col-sm-4">Région</dt>
+            <dd class="col-sm-8">@Model.Region</dd>
+
+            <dt class="col-sm-4">Langue</dt>
+            <dd class="col-sm-8">@Model.Language</dd>
+        </dl>
+    </div>
+
+    <!-- Colonne droite : image -->
+    <div class="col-md-6 d-flex justify-content-center align-items-start">
+        <img src="@Model.CoverImageUrl" alt="@Model.Title"
+             class="img-fluid shadow-lg rounded mb-3 @(Model.ConsoleName == "SNES" ? "cover-snes" : "cover-nes")" />
+    </div>
+
+
+</div>
+
+<!-- Barre horizontale pleine largeur sous tout le contenu -->
+<hr class="mt-4" />
+
+<!-- Boutons alignés à droite sous la barre -->
+<div class="text-end mt-3">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-sm btn-warning">Modifier</a>
+    <a asp-action="Index" class="btn btn-sm btn-secondary">Retour à la liste</a>
+</div>

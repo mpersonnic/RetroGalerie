@@ -1,0 +1,140 @@
+﻿@model RetroGalerie.Models.HomeViewModel
+
+<div class="container">
+    <h1 class="display-4 text-center mb-5">RetroGalerie</h1>
+
+    @{
+        var totalJeux = Model.Consoles.Sum(c => c.GameCount);
+    }
+
+    <!-- Total général -->
+    <div class="text-center mb-4">
+        <h3>Total général : @totalJeux jeux</h3>
+    </div>
+
+    <!-- Tableau récap cliquable -->
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Console</th>
+                <th class="text-end">Nombre de jeux</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var console in Model.Consoles)
+            {
+                var collapseId = $"collapse-{console.ConsoleName.Replace(" ", "")}";
+
+                <!-- Ligne cliquable -->
+                <tr class="console-toggle"
+                    style="cursor:pointer"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#@collapseId"
+                    data-target-id="@collapseId">
+
+                    <td>
+                        @console.ConsoleName
+                    </td>
+
+                    <td class="text-end">
+                        <span class="badge bg-primary">@console.GameCount</span>
+                        <span class="arrow ms-2">&#9656;</span>
+                    </td>
+                </tr>
+
+                <!-- Ligne contenant les cards -->
+                <tr class="collapse" id="@collapseId">
+                    <td colspan="2">
+                        <div class="row mt-3">
+                            @foreach (var game in console.Games)
+                            {
+                                <div class="col-md-3 mb-4">
+                                    <div class="card h-100 shadow-sm">
+                                        <a asp-controller="Games" asp-action="Details" asp-route-id="@game.Id">
+                                            <img src="@game.CoverImageUrl"
+                                                 class="card-img-top @(game.ConsoleName == "SNES" ? "card-img-snes" : "card-img-nes")"
+                                                 alt="@game.Title" />
+                                        </a>
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title">@game.Title</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Script pour gérer l'indicateur visuel -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const items = document.querySelectorAll(".console-toggle");
+
+        items.forEach(item => {
+            const collapseId = item.getAttribute("data-target-id");
+            const collapseElement = document.getElementById(collapseId);
+
+            collapseElement.addEventListener("show.bs.collapse", () => {
+                item.classList.add("active-console");
+            });
+
+            collapseElement.addEventListener("hide.bs.collapse", () => {
+                item.classList.remove("active-console");
+            });
+        });
+    });
+</script>
+
+<!-- Style pour l'indicateur visuel -->
+<style>
+    /* En-tête du tableau : plus clair et lisible */
+    table thead th {
+        background-color: #4f6b5a !important; /* vert clair */
+        color: #f8f9fa !important; /* texte clair */
+        font-weight: bold;
+        border-bottom: 2px solid #3d4f45; /* petite séparation élégante */
+    }
+
+    /* État neutre : lisible sur thème sombre */
+    .console-toggle {
+        background-color: #1f2a24 !important; /* vert très foncé mais plus clair que ton fond */
+        color: #f8f9fa !important; /* texte clair */
+    }
+
+        /* Survol : un peu plus lumineux */
+        .console-toggle:hover {
+            background-color: #2c3a32 !important; /* légèrement plus clair */
+            color: #f8f9fa !important;
+        }
+
+    /* État actif : encore plus clair + gras */
+    .active-console {
+        background-color: #3d4f45 !important; /* vert/gris clair */
+        font-weight: bold;
+        color: #f8f9fa !important;
+    }
+
+        /* Assure que tout le texte reste clair */
+        .active-console td,
+        .active-console span {
+            color: #f8f9fa !important;
+        }
+
+    /* Flèche animée */
+    .console-toggle .arrow {
+        transition: transform 0.3s ease;
+        color: #f8f9fa !important;
+    }
+
+    .active-console .arrow {
+        transform: rotate(90deg);
+    }
+
+
+</style>
+
+
