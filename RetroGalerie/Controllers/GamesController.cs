@@ -128,7 +128,8 @@ namespace RetroGalerie.Controllers
                     {
                         GameId = game.Id,
                         UserId = user.Id,
-                        Note = 0
+                        Note = 0,
+                        Owned = gameViewModel.Owned,
                     });
                     await _context.SaveChangesAsync();
                 }
@@ -150,9 +151,26 @@ namespace RetroGalerie.Controllers
             var game = await _context.Games.FindAsync(id);
             if (game == null) return NotFound();
 
+            var vm = _mapper.ToViewModel(game);
+
+            // 🔥 Récupérer l'utilisateur connecté
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                // 🔥 Récupérer la relation GameGamer
+                var relation = await _context.GameGamers
+                    .FirstOrDefaultAsync(gg => gg.UserId == user.Id && gg.GameId == id);
+
+                if (relation != null)
+                {
+                    vm.Owned = relation.Owned; // Jeu possédé ou non
+                }
+            }
+
             ViewData["ConsoleId"] = new SelectList(_context.Consoles, "Id", "Name", game.ConsoleId);
-            return View(_mapper.ToViewModel(game));
+            return View(vm);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -206,6 +224,21 @@ namespace RetroGalerie.Controllers
                     else
                         throw;
                 }
+
+                // 🔥 Mise à jour de la relation GameGamer
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    var relation = await _context.GameGamers
+                        .FirstOrDefaultAsync(gg => gg.UserId == user.Id && gg.GameId == id);
+
+                    if (relation != null)
+                    {
+                        relation.Owned = gameViewModel.Owned;
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
                 return RedirectToAction(nameof(Index));
             }
 

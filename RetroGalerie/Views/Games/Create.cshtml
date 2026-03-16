@@ -67,6 +67,13 @@
                 <select asp-for="ConsoleId" class="form-control" asp-items="ViewBag.ConsoleId"></select>
                 <span asp-validation-for="ConsoleId" class="text-danger"></span>
             </div>
+            <div class="form-group form-check mt-3">
+                <input asp-for="Owned" class="form-check-input" type="checkbox" id="ownedToggle" />
+                <label class="form-check-label" for="ownedToggle">
+                    Jeu possédé
+                </label>
+            </div>
+
             <div class="form-group mt-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
                 <a asp-action="Index" class="btn btn-secondary">Back to List</a>

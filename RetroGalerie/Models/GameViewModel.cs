@@ -45,6 +45,9 @@ namespace RetroGalerie.Models
         [Required, StringLength(50)]
         public string Language { get; init; } = string.Empty;
 
+        [Required]
+        public bool Owned { get; set; }
+
         // Clé étrangère vers Console
         public int ConsoleId { get; init; }
 
