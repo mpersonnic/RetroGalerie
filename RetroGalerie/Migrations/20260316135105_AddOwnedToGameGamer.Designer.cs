@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetroGalerie.Data;
 
@@ -11,9 +12,11 @@ using RetroGalerie.Data;
 namespace RetroGalerie.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260316135105_AddOwnedToGameGamer")]
+    partial class AddOwnedToGameGamer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,6 +256,9 @@ namespace RetroGalerie.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("GamerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Note")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -264,6 +270,8 @@ namespace RetroGalerie.Migrations
                     b.HasKey("UserId", "GameId");
 
                     b.HasIndex("GameId");
+
+                    b.HasIndex("GamerId");
 
                     b.ToTable("GameGamers");
                 });
@@ -437,8 +445,12 @@ namespace RetroGalerie.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RetroGalerie.Data.Gamer", "Gamer")
+                    b.HasOne("RetroGalerie.Data.Gamer", null)
                         .WithMany("GameGamers")
+                        .HasForeignKey("GamerId");
+
+                    b.HasOne("RetroGalerie.Data.Gamer", "Gamer")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

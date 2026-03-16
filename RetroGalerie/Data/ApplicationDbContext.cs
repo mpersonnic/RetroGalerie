@@ -82,7 +82,7 @@ namespace RetroGalerie.Data
                 entity.HasKey(gg => new { gg.UserId, gg.GameId }); // clé composite
 
                 entity.HasOne(gg => gg.Gamer)
-                      .WithMany()
+                      .WithMany(g => g.GameGamers)
                       .HasForeignKey(gg => gg.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
 

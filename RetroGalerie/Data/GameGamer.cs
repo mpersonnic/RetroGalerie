@@ -14,6 +14,9 @@
         public int GameId { get; set; }
         public int Note {  get; set; }
 
+        // Si false, le jeu est dans la liste de souhaits du joueur, sinon il fait partie de sa collection
+        public bool Owned { get; set; }
+
         public Gamer Gamer { get; set; }
         public Game Game { get; set; }
 
