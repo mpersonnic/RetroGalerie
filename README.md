@@ -26,6 +26,7 @@ Il reste à développer la partie "jeux que souhaite voir entrer la collection".
 - Indicateur visuel d’état (flèche qui pivote, ligne active)  
 - Séparation claire entre données, présentation et interactions
 - Création des jeux souhaités (à venir)
-
+- Création d'une couche de service pour ne pas mettre tout le code dans les controllers
+  
 Ce projet illustre une approche **simple et orientée métier** :  
 livrer vite, clarifier le domaine, éviter la complexité inutile, et garder une UI lisible et efficace.
