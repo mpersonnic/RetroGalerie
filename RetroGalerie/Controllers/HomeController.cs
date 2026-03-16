@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using RetroGalerie.Data;
@@ -11,16 +12,21 @@ namespace RetroGalerie.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<Gamer> _userManager;
 
-        public HomeController(ILogger<HomeController> logger,ApplicationDbContext context)
+
+        public HomeController(ILogger<HomeController> logger,ApplicationDbContext context, UserManager<Gamer> userManager)
         {
             _context = context;            
             _logger = logger;
+            _userManager = userManager;
         }
 
         [Authorize]
         public IActionResult Index()
         {
+            var user = _userManager.GetUserAsync(User).Result;
+
             var consoles = _context.Consoles
                 .Select(c => new ConsoleGroupViewModel
                 {
@@ -30,9 +36,12 @@ namespace RetroGalerie.Controllers
                         Id = g.Id,
                         Title = g.Title,
                         CoverImageUrl = g.CoverImageUrl,
-                        ConsoleName = c.Name   // <-- important !
+                        ConsoleName = c.Name,
+                        Owned = _context.GameGamers
+                            .Any(gg => gg.GameId == g.Id && gg.UserId == user.Id && gg.Owned)
                     }).ToList()
                 }).ToList();
+
 
             var vm = new HomeViewModel
             {
