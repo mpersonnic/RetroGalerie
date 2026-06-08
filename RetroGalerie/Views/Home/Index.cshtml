@@ -1,5 +1,6 @@
-﻿@model RetroGalerie.Models.HomeViewModel
-
+﻿@using RetroGalerie.Services
+@model RetroGalerie.Models.HomeViewModel
+@inject SharedLocalizationService Localizer
 <div class="container">
     <h1 class="display-4 text-center mb-5">RetroGalerie</h1>
 
@@ -9,14 +10,14 @@
 
     <!-- Total général -->
     <div class="text-center mb-4">
-        <h3>Total général : <span id="totalJeuxGlobal">@totalJeux</span> jeux</h3>
+        <h3>@Localizer.Get("GlobalTotal") <span id="totalJeuxGlobal">@totalJeux</span> @Localizer.Get("Games")</h3>
     </div>
 
     <!-- Jeux possédés ou en liste de souhaits -->
     <div class="text-center mb-4">
         <div class="btn-group" role="group">
-            <button id="btnOwned" class="btn btn-success active">Jeux possédés</button>
-            <button id="btnWishlist" class="btn btn-outline-secondary">Jeux souhaités</button>
+            <button id="btnOwned" class="btn btn-success active">@Localizer.Get("OwnedGames")</button>
+            <button id="btnWishlist" class="btn btn-outline-secondary">@Localizer.Get("WishlistGames")</button>
         </div>
     </div>
 
@@ -24,8 +25,8 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>Console</th>
-                <th class="text-end">Nombre de jeux</th>
+                <th>@Localizer.Get("Platform")</th>
+                <th class="text-end">@Localizer.Get("NumberOfGames")</th>
             </tr>
         </thead>
         <tbody>

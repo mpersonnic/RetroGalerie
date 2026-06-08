@@ -144,11 +144,20 @@
   <data name="Edit" xml:space="preserve">
     <value>Modifier</value>
   </data>
+  <data name="Games" xml:space="preserve">
+    <value>jeux</value>
+  </data>
   <data name="GamesList" xml:space="preserve">
     <value>Liste des jeux</value>
   </data>
   <data name="Genre" xml:space="preserve">
     <value>Genre</value>
+  </data>
+  <data name="GlobalTotal" xml:space="preserve">
+    <value>Total général :</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Acceuil</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Langue</value>
@@ -168,17 +177,26 @@
   <data name="No_Image" xml:space="preserve">
     <value>Pas d'image</value>
   </data>
+  <data name="NumberOfGames" xml:space="preserve">
+    <value>Nombre de jeux</value>
+  </data>
   <data name="NumberOfPlayers" xml:space="preserve">
     <value>Nombre de joueurs</value>
   </data>
   <data name="OwnedGame" xml:space="preserve">
-    <value>Jeux possédé</value>
+    <value>Jeu possédé</value>
+  </data>
+  <data name="OwnedGames" xml:space="preserve">
+    <value>Jeux possédés</value>
   </data>
   <data name="Platform" xml:space="preserve">
     <value>Console</value>
   </data>
   <data name="Platforms" xml:space="preserve">
     <value>Consoles</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>Confidentialité</value>
   </data>
   <data name="Publisher" xml:space="preserve">
     <value>Editeur</value>
@@ -198,10 +216,28 @@
   <data name="Title" xml:space="preserve">
     <value>Titre</value>
   </data>
+  <data name="WishlistGames" xml:space="preserve">
+    <value>Jeux souhaités</value>
+  </data>
   <data name="Year" xml:space="preserve">
     <value>Année</value>
   </data>
   <data name="YearOfPublication" xml:space="preserve">
     <value>Année de sortie</value>
+  </data>
+  <data name="GamesUpper" xml:space="preserve">
+    <value>Jeux</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Bonjour</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Se déconnecter</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>S'inscrire</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Connexion</value>
   </data>
 </root>

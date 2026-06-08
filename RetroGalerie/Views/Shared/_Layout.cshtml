@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using RetroGalerie.Services
+@inject SharedLocalizationService Localizer
+<!DOCTYPE html>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const searchInput = document.getElementById("gameSearch");
@@ -59,16 +61,16 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@Localizer.Get("Home")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Games" asp-action="Index">Jeux</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Games" asp-action="Index">@Localizer.Get("GamesUpper")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Consoles" asp-action="Index">Consoles</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Consoles" asp-action="Index">@Localizer.Get("Platforms")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer.Get("Privacy")</a>
                         </li>
                     </ul>
                     <!-- recherche de jeux -->
