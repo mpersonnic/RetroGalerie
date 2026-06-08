@@ -5,9 +5,8 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>@Localizer.Get("Edit")</h1>
 
-<h4>ConsoleViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -35,7 +34,7 @@
 
             <!-- Image actuelle -->
             <div class="form-group">
-                <label class="control-label">@Localizer.Get("Current_Image")</label><br />
+                <label class="control-label">@Localizer.Get("Replace_Image")</label><br />
                 @if (!string.IsNullOrEmpty(Model.ImageUrl))
                 {
                     <img src="@Model.ImageUrl" alt="@Model.Name"

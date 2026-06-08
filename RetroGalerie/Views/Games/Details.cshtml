@@ -1,5 +1,6 @@
-﻿@model RetroGalerie.Models.GameViewModel
-
+﻿@using RetroGalerie.Services
+@model RetroGalerie.Models.GameViewModel
+@inject SharedLocalizationService Localizer
 @{
     ViewData["Title"] = "Details";
 }
@@ -27,28 +28,28 @@
     <!-- Colonne gauche : infos textuelles -->
     <div class="col-md-6">
         <dl class="row">
-            <dt class="col-sm-4">Description</dt>
+            <dt class="col-sm-4">@Localizer.Get("Description")</dt>
             <dd class="col-sm-8">@Model.Description</dd>
 
-            <dt class="col-sm-4">Année</dt>
+            <dt class="col-sm-4">@Localizer.Get("YearOfPublication")</dt>
             <dd class="col-sm-8">@Model.YearOfPublication</dd>
 
-            <dt class="col-sm-4">Nombre de joueurs</dt>
+            <dt class="col-sm-4">@Localizer.Get("NumberOfPlayers")</dt>
             <dd class="col-sm-8">@Model.NumberOfPlayers</dd>
 
-            <dt class="col-sm-4">Genre</dt>
+            <dt class="col-sm-4">@Localizer.Get("Genre")</dt>
             <dd class="col-sm-8">@Model.Genre</dd>
 
-            <dt class="col-sm-4">Développeur</dt>
+            <dt class="col-sm-4">@Localizer.Get("Developer")</dt>
             <dd class="col-sm-8">@Model.Developer</dd>
 
-            <dt class="col-sm-4">Éditeur</dt>
+            <dt class="col-sm-4">@Localizer.Get("Publisher")</dt>
             <dd class="col-sm-8">@Model.Publisher</dd>
 
-            <dt class="col-sm-4">Région</dt>
+            <dt class="col-sm-4">@Localizer.Get("Region")</dt>
             <dd class="col-sm-8">@Model.Region</dd>
 
-            <dt class="col-sm-4">Langue</dt>
+            <dt class="col-sm-4">@Localizer.Get("Language")</dt>
             <dd class="col-sm-8">@Model.Language</dd>
         </dl>
     </div>
@@ -67,6 +68,6 @@
 
 <!-- Boutons alignés à droite sous la barre -->
 <div class="text-end mt-3">
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-sm btn-warning">Modifier</a>
-    <a asp-action="Index" class="btn btn-sm btn-secondary">Retour à la liste</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-sm btn-warning">@Localizer.Get("Edit")</a>
+    <a asp-action="Index" class="btn btn-sm btn-secondary">@Localizer.Get("Back_to_List")</a>
 </div>
