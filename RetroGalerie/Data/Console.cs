@@ -6,10 +6,10 @@
     public class Console
     {
         public int Id { get; set; }
-        public string Name { get; set; }        // ex: "Super Nintendo"
-        public string Manufacturer { get; set; } // ex: "Nintendo"
+        public required string Name { get; set; }        // ex: "Super Nintendo"
+        public string Manufacturer { get; set; } = string.Empty; // ex: "Nintendo"
         public int ReleaseYear { get; set; }
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
 
         public string? Description { get; set; }
 

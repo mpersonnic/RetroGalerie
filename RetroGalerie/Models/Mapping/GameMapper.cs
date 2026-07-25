@@ -6,7 +6,7 @@ namespace RetroGalerie.Models.Mapping
     {
         public override GameViewModel ToViewModel(Game entity)
         {
-            if (entity == null) return null;
+            ArgumentNullException.ThrowIfNull(entity);
 
             return new GameViewModel
             {
@@ -22,13 +22,13 @@ namespace RetroGalerie.Models.Mapping
                 Language = entity.Language,
                 CoverImageUrl = entity.CoverImageUrl,
                 ConsoleId = entity.ConsoleId,
-                ConsoleName = entity.Console?.Name
+                ConsoleName = entity.Console?.Name ?? string.Empty
             };
         }
 
         public override Game ToEntity(GameViewModel vm)
         {
-            if (vm == null) return null;
+            ArgumentNullException.ThrowIfNull(vm);
 
             return new Game
             {
@@ -42,7 +42,7 @@ namespace RetroGalerie.Models.Mapping
                 Publisher = vm.Publisher,
                 Region = vm.Region,
                 Language = vm.Language,
-                CoverImageUrl = vm.CoverImageUrl,
+                CoverImageUrl = vm.CoverImageUrl ?? string.Empty,
                 ConsoleId = vm.ConsoleId
             };
         }

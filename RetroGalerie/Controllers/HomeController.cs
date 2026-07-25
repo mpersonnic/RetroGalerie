@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RetroGalerie.Data;
 using RetroGalerie.Models;
 using System.Diagnostics;
@@ -26,31 +27,31 @@ namespace RetroGalerie.Controllers
         public IActionResult Index()
         {
             var user = _userManager.GetUserAsync(User).Result;
+            if (user is null)
+                return Unauthorized();
 
             var consoles = _context.Consoles
                 .Select(c => new ConsoleGroupViewModel
                 {
                     ConsoleName = c.Name,
-                    Games = c.Games.Select(g => new GameViewModel
-                    {
-                        Id = g.Id,
-                        Title = g.Title,
-                        CoverImageUrl = g.CoverImageUrl,
-                        ConsoleName = c.Name,
-                        Owned = _context.GameGamers
-                            .Any(gg => gg.GameId == g.Id && gg.UserId == user.Id && gg.Owned)
-                    }).ToList()
-                }).ToList();
+                    Games = c.Games
+                        .Select(g => new GameViewModel
+                        {
+                            Id = g.Id,
+                            Title = g.Title,
+                            CoverImageUrl = g.CoverImageUrl,
+                            ConsoleName = c.Name,
+                            Owned = _context.GameGamers
+                                .Where(gg => gg.GameId == g.Id && gg.UserId == user.Id)
+                                .Select(gg => gg.Owned)
+                                .FirstOrDefault()
+                        })
+                        .ToList()
+                })
+                .ToList();
 
-
-            var vm = new HomeViewModel
-            {
-                Consoles = consoles
-            };
-
-            return View(vm);
+            return View(new HomeViewModel { Consoles = consoles });
         }
-
 
 
         [Authorize]

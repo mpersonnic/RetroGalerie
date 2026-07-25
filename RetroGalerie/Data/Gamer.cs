@@ -14,6 +14,6 @@ namespace RetroGalerie.Data
 
         public string? Name { get; set; }
         public string? FisrtName { get; set; }
-        public ICollection<GameGamer> GameGamers { get; set; }
+        public ICollection<GameGamer> GameGamers { get; set; } = new List<GameGamer>();
     }
 }

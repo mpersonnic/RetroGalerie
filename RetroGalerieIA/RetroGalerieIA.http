@@ -1,0 +1,6 @@
+@RetroGalerieIA_HostAddress = http://localhost:5029
+
+GET {{RetroGalerieIA_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -10,9 +10,10 @@ namespace RetroGalerie.Services
         private readonly IStringLocalizer localizer;
         public SharedLocalizationService(IStringLocalizerFactory factory)
         {
-            var assemblyName = new AssemblyName(typeof(SharedResources).GetTypeInfo().Assembly.FullName);
-            localizer = factory.Create(nameof(SharedResources), assemblyName.Name);
+            var assemblyName = new AssemblyName(typeof(SharedResources).Assembly.FullName!);
+            localizer = factory.Create(nameof(SharedResources), assemblyName.Name!);
         }
+
 
         public string Get(string key)
         {
