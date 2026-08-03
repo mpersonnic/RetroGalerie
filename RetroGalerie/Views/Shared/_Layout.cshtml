@@ -1,52 +1,78 @@
 ﻿@using RetroGalerie.Services
 @inject SharedLocalizationService Localizer
+
 <!DOCTYPE html>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.getElementById("gameSearch");
-        const suggestionsBox = document.getElementById("searchSuggestions");
-
-        searchInput.addEventListener("input", function () {
-            const query = this.value;
-            if (query.length < 3) {
-                suggestionsBox.innerHTML = "";
-                return;
-            }
-
-            fetch(`/Games/Autocomplete?term=${encodeURIComponent(query)}`)
-                .then(response => response.json())
-                .then(data => {
-                    suggestionsBox.innerHTML = "";
-                    data.forEach(item => {
-                        const option = document.createElement("a");
-                        option.classList.add("list-group-item", "list-group-item-action");
-                        option.textContent = item.title;
-                        option.href = `/Games/Details/${item.id}`;
-                        suggestionsBox.appendChild(option);
-                    });
-                });
-        });
-
-        // Fermer les suggestions si on clique ailleurs
-        document.addEventListener("click", function (e) {
-            if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
-                suggestionsBox.innerHTML = "";
-            }
-        });
-    });
-
-</script>
-
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - RetroGalerie</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <!-- Thème Bootswatch -->
     <link rel="stylesheet" href="~/css/bootstrap.solar.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RetroGalerie.styles.css" asp-append-version="true" />
+
+    <style>
+            /* --- Widget IA --- */
+
+            #ia-launcher {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #10b981;
+                color: #022c22;
+                width: 55px;
+                height: 55px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 26px;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+                z-index: 9999;
+                transition: transform .2s ease;
+            }
+
+                #ia-launcher:hover {
+                    transform: scale(1.1);
+                }
+
+            #ia-chat-window {
+                position: fixed;
+                bottom: 90px;
+                right: 20px;
+                width: 380px;
+                height: 480px;
+                background: #1e1e2f;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+                display: none;
+                z-index: 9998;
+                animation: iaFadeIn .25s ease;
+                color: #fff; /* texte Solar */
+            }
+
+            #iaFadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            #ia-chat-window iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+    </style>
 </head>
 
 <body>
@@ -54,36 +80,40 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RetroGalerie</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@Localizer.Get("Home")</a>
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">@Localizer.Get("Home")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Games" asp-action="Index">@Localizer.Get("GamesUpper")</a>
+                            <a class="nav-link text-dark" asp-controller="Games" asp-action="Index">@Localizer.Get("GamesUpper")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Consoles" asp-action="Index">@Localizer.Get("Platforms")</a>
+                            <a class="nav-link text-dark" asp-controller="Consoles" asp-action="Index">@Localizer.Get("Platforms")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer.Get("Privacy")</a>
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">@Localizer.Get("Privacy")</a>
                         </li>
                     </ul>
-                    <!-- recherche de jeux -->
+
+                    <!-- Recherche -->
                     <form class="d-flex me-3 position-relative" asp-controller="Games" asp-action="Search" method="get">
                         <input id="gameSearch" name="query" class="form-control me-2" type="search"
-                               placeholder="Rechercher un jeu..." aria-label="Search" autocomplete="off" />
+                               placeholder="Rechercher un jeu..." autocomplete="off" />
                         <div id="searchSuggestions" class="list-group position-absolute w-100"
                              style="top:100%; z-index:1050;"></div>
                     </form>
 
-
-                    <!-- Sélecteur de langue -->
-                    <form id="selectLanguage" asp-controller="Home" asp-action="SetLanguage" method="post" class="d-flex me-3">
+                    <!-- Langue -->
+                    <form id="selectLanguage" asp-controller="Home" asp-action="SetLanguage"
+                          method="post" class="d-flex me-3">
                         <select name="culture" onchange="this.form.submit()" class="form-select form-select-sm">
                             <option value="fr" selected="@((System.Threading.Thread.CurrentThread.CurrentCulture.Name == "fr"))">🇫🇷 Français</option>
                             <option value="en" selected="@((System.Threading.Thread.CurrentThread.CurrentCulture.Name == "en"))">🇬🇧 English</option>
@@ -96,6 +126,7 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -104,12 +135,70 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - RetroGalerie - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - RetroGalerie -
+            <a asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
+    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- --- Widget IA --- -->
+    <div id="ia-launcher">💬</div>
+
+    <div id="ia-chat-window">
+        <iframe src="/IA/Chat"></iframe>
+    </div>
+
+    <script>
+            document.addEventListener("DOMContentLoaded", () => {
+
+                /* --- Autocomplete jeux --- */
+                const searchInput = document.getElementById("gameSearch");
+                const suggestionsBox = document.getElementById("searchSuggestions");
+
+                if (searchInput) {
+                    searchInput.addEventListener("input", () => {
+                        const query = searchInput.value;
+                        if (query.length < 3) {
+                            suggestionsBox.innerHTML = "";
+                            return;
+                        }
+
+                        fetch(`/Games/Autocomplete?term=${encodeURIComponent(query)}`)
+                            .then(r => r.json())
+                            .then(data => {
+                                suggestionsBox.innerHTML = "";
+                                data.forEach(item => {
+                                    const option = document.createElement("a");
+                                    option.classList.add("list-group-item", "list-group-item-action");
+                                    option.textContent = item.title;
+                                    option.href = `/Games/Details/${item.id}`;
+                                    suggestionsBox.appendChild(option);
+                                });
+                            });
+                    });
+
+                    document.addEventListener("click", (e) => {
+                        if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                            suggestionsBox.innerHTML = "";
+                        }
+                    });
+                }
+
+                /* --- Widget IA --- */
+                const launcher = document.getElementById("ia-launcher");
+                const windowChat = document.getElementById("ia-chat-window");
+
+                launcher.addEventListener("click", () => {
+                    const visible = windowChat.style.display === "block";
+                    windowChat.style.display = visible ? "none" : "block";
+                });
+            });
+    </script>
+
 </body>
 </html>

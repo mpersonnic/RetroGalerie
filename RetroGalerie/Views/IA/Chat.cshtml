@@ -1,0 +1,114 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <title>RetroGalerie IA</title>
+    <style>
+        body {
+    background: #fdf6e3;   /* fond Solar */
+    color: #657b83;        /* texte Solar */
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.chat-header {
+    background: #eee8d5;
+    color: #657b83;
+}
+
+.bubble.ai {
+    background: #eee8d5;
+    color: #657b83;
+}
+
+.bubble.user {
+    background: #268bd2;
+    color: #fdf6e3;
+}
+
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>RetroGalerie IA</h1>
+            <span>Chat en direct avec ton inventaire de jeux rétro</span>
+            <br />
+        </div>
+
+        <div id="messages" class="chat-messages"></div>
+
+        <div class="chat-input">
+            <textarea id="input" rows="2" placeholder="Pose une question sur ta collection..."></textarea>
+            <button id="send">Envoyer</button>
+        </div>
+        <br />
+        <div class="status" id="status">Prêt.</div>
+    </div>
+
+    <script>
+        const messagesEl = document.getElementById("messages");
+        const inputEl = document.getElementById("input");
+        const sendBtn = document.getElementById("send");
+        const statusEl = document.getElementById("status");
+
+        let socket = null;
+
+        function appendMessage(text, role) {
+            const row = document.createElement("div");
+            row.className = "message-row " + role;
+
+            const bubble = document.createElement("div");
+            bubble.className = "bubble " + role;
+            bubble.textContent = text;
+
+            row.appendChild(bubble);
+            messagesEl.appendChild(row);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        function connectSocket() {
+            socket = new WebSocket(`wss://${window.location.host}/ws/chat`);
+
+            socket.onopen = () => {
+                statusEl.textContent = "Connecté.";
+            };
+
+            socket.onmessage = (event) => {
+                appendMessage(event.data, "ai");
+            };
+
+            socket.onclose = () => {
+                statusEl.textContent = "Déconnecté. Reconnexion...";
+                setTimeout(connectSocket, 2000);
+            };
+
+            socket.onerror = () => {
+                statusEl.textContent = "Erreur WebSocket.";
+            };
+        }
+
+        connectSocket();
+
+        sendBtn.addEventListener("click", () => {
+            const q = inputEl.value.trim();
+            if (!q || !socket || socket.readyState !== WebSocket.OPEN) return;
+
+            appendMessage(q, "user");
+            inputEl.value = "";
+            statusEl.textContent = "En cours...";
+            socket.send(q);
+        });
+
+        inputEl.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
