@@ -50,7 +50,7 @@ Ce mécanisme permet d’éviter les hallucinations et de fournir des réponses 
 ## Installation
 
 ### 1. Installer Ollama
- - Lancer 'ollama pull llama3' dans un terminal
+ - Lancer `ollama pull llama3` dans un terminal
 
 
 ### 2. Configurer l’API
