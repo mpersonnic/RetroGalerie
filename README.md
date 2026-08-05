@@ -66,6 +66,6 @@ Modifier `appsettings.json` :
     "RetroGalerie": "Server=...;Database=RetroGalerie;..."
   }
 }
----
+```
 Ce projet illustre une approche **simple et orientée métier** :  
 livrer vite, clarifier le domaine, éviter la complexité inutile, et garder une UI lisible et efficace.
