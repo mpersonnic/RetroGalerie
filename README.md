@@ -19,13 +19,13 @@ Outre la collection de jeux possédés, l'appli permet de saisir les "jeux que s
   - cartes Bootstrap avec images, titres, navigation  
   - gestion d’état (collapse ouvert/fermé) via JS
 
-# RetroGalerie.AI
+# RetroGalerie : Chatbot IA:
 
 RetroGalerie.AI est une API IA en **.NET 8 Minimal API** qui combine :
 - un modèle IA local via **Ollama**
 - un système de **RAG (Retrieval-Augmented Generation)** connecté à la base RetroGalerie
 
-L’objectif : permettre un chatbot capable de répondre avec précision sur les jeux rétro, consoles, variantes FRA, états, éditions, etc.
+L’objectif : permettre un chatbot capable de répondre avec précision sur les jeux rétro présent dans la collection: listes de jeux, consoles, variantes FRA, états, éditions, etc.
 
 ---
 
@@ -66,6 +66,6 @@ Modifier `appsettings.json` :
     "RetroGalerie": "Server=...;Database=RetroGalerie;..."
   }
 }
-  ```
+---
 Ce projet illustre une approche **simple et orientée métier** :  
 livrer vite, clarifier le domaine, éviter la complexité inutile, et garder une UI lisible et efficace.
