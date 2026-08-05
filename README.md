@@ -49,7 +49,7 @@ L’objectif : permettre un chatbot capable de répondre avec précision sur les
 Ce mécanisme permet d’éviter les hallucinations et de fournir des réponses basées sur les données réelles du projet.
 ## Installation
 
-### 1. Installer Ollama
+### 1. Installer Ollama => **Lien :** https://ollama.com/download
  - Lancer `ollama pull llama3` dans un terminal
 
 
