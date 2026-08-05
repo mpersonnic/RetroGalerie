@@ -1,7 +1,7 @@
 ## 🟪 RetroGalerie — ASP.NET MVC + Razor (Clean Architecture légère) + Chat IA (Ollama)
 **Lien :** https://github.com/mpersonnic/RetroGalerie
 
-Application ASP.NET MVC avec Razor Views, orientée **gestion de collections de jeux rétro**.  
+Application ASP.NET MVC (.Net 10) avec Razor Views, orientée **gestion de collections de jeux rétro**.  
 Le projet met l’accent sur une architecture claire, une UI dynamique côté serveur et une logique métier explicite.
 Outre la collection de jeux possédés, l'appli permet de saisir les "jeux que souhaite voir entrer la collection".
 
