@@ -3,7 +3,7 @@
 
 Application ASP.NET MVC avec Razor Views, orientée **gestion de collections de jeux rétro**.  
 Le projet met l’accent sur une architecture claire, une UI dynamique côté serveur et une logique métier explicite.
-Il reste à développer la partie "jeux que souhaite voir entrer la collection".
+Outre la collection de jeux possédés, l'appli permet de saisir les "jeux que souhaite voir entrer la collection".
 
 ### Points clés
 - **ASP.NET MVC + Razor** : rendu serveur, vues fortement typées, logique claire et maintenable  
@@ -21,17 +21,32 @@ Il reste à développer la partie "jeux que souhaite voir entrer la collection".
 
 # RetroGalerie.AI
 
-RetroGalerie.AI est une API IA en **.NET 8 Minimal API** permettant :
-- de discuter avec un modèle IA local via **Ollama**
-- d’effectuer des recherches intelligentes dans la base RetroGalerie
-- de combiner données + IA pour des réponses enrichies
+RetroGalerie.AI est une API IA en **.NET 8 Minimal API** qui combine :
+- un modèle IA local via **Ollama**
+- un système de **RAG (Retrieval-Augmented Generation)** connecté à la base RetroGalerie
 
-## Fonctionnalités
+L’objectif : permettre un chatbot capable de répondre avec précision sur les jeux rétro, consoles, variantes FRA, états, éditions, etc.
+
+---
+
+## ✨ Fonctionnalités
+
 - Chat IA (modèle local Ollama)
-- Recherche intelligente (retrieval EF Core)
+- **RAG** : recherche dans la base RetroGalerie + génération IA
 - Architecture propre : Domain / Application / Infrastructure / API
 - Endpoints Minimal API
 
+---
+
+## 🔍 RAG : comment ça marche?
+
+1. L’utilisateur pose une question  
+2. Le service de retrieval analyse la requête  
+3. Recherche dans la base RetroGalerie (EF Core)  
+4. Les données trouvées sont injectées dans le prompt  
+5. Le modèle IA génère une réponse enrichie et exacte
+
+Ce mécanisme permet d’éviter les hallucinations et de fournir des réponses basées sur les données réelles du projet.
 ## Installation
 
 ### 1. Installer Ollama
@@ -51,6 +66,6 @@ Modifier `appsettings.json` :
     "RetroGalerie": "Server=...;Database=RetroGalerie;..."
   }
 }
-  
+  ```
 Ce projet illustre une approche **simple et orientée métier** :  
 livrer vite, clarifier le domaine, éviter la complexité inutile, et garder une UI lisible et efficace.
