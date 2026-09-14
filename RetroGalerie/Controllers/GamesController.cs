@@ -105,6 +105,16 @@ namespace RetroGalerie.Controllers
                 }
 
                 var fileName = "default.png";
+
+                // Vérifier que la console existe et l'attacher au contexte
+                var console1 = await _context.Consoles.FirstOrDefaultAsync(c => c.Id == gameViewModel.ConsoleId);
+                if (console1 == null)
+                {
+                    ModelState.AddModelError("ConsoleId", "La console sélectionnée n'existe pas.");
+                    ViewData["ConsoleId"] = new SelectList(_context.Consoles, "Id", "Name", gameViewModel.ConsoleId);
+                    return View(gameViewModel);
+                }
+
                 if (gameViewModel.CoverImageFile != null)
                 {
                     fileName = Path.GetFileName(gameViewModel.CoverImageFile.FileName);
@@ -116,7 +126,9 @@ namespace RetroGalerie.Controllers
                     }
                 }
                 var game = _mapper.ToEntity(gameViewModel);
+                
                 game.CoverImageUrl = "/images/covers/" + fileName;
+
                 _context.Games.Add(game);
                 await _context.SaveChangesAsync();
 

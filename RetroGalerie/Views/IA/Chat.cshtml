@@ -1,5 +1,5 @@
-﻿@{
-    Layout = null;
+@{
+    Layout = "/Views/Shared/_LayoutIA.cshtml";
 }
 
 <!DOCTYPE html>
@@ -8,27 +8,42 @@
     <meta charset="utf-8" />
     <title>RetroGalerie IA</title>
     <style>
-        body {
-    background: #fdf6e3;   /* fond Solar */
-    color: #657b83;        /* texte Solar */
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+            body {
+                background: #fdf6e3;
+                color: #657b83;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            }
 
-.chat-header {
-    background: #eee8d5;
-    color: #657b83;
-}
+            .chat-header {
+                background: #eee8d5;
+                color: #657b83;
+            }
 
-.bubble.ai {
-    background: #eee8d5;
-    color: #657b83;
-}
+            .bubble.ai {
+                background: #eee8d5;
+                color: #657b83;
+            }
 
-.bubble.user {
-    background: #268bd2;
-    color: #fdf6e3;
-}
+            .bubble.user {
+                background: #268bd2;
+                color: #fdf6e3;
+            }
 
+            .chat-messages {
+                height: 320px;
+                overflow-y: auto;
+                padding: 10px;
+            }
+
+            .message-row {
+                margin-bottom: 10px;
+            }
+
+            .bubble {
+                padding: 8px 12px;
+                border-radius: 8px;
+                max-width: 90%;
+            }
     </style>
 </head>
 <body>
@@ -45,70 +60,57 @@
             <textarea id="input" rows="2" placeholder="Pose une question sur ta collection..."></textarea>
             <button id="send">Envoyer</button>
         </div>
+
         <br />
         <div class="status" id="status">Prêt.</div>
     </div>
 
     <script>
-        const messagesEl = document.getElementById("messages");
-        const inputEl = document.getElementById("input");
-        const sendBtn = document.getElementById("send");
-        const statusEl = document.getElementById("status");
+            const messagesEl = document.getElementById("messages");
+            const inputEl = document.getElementById("input");
+            const sendBtn = document.getElementById("send");
+            const statusEl = document.getElementById("status");
 
-        let socket = null;
+            // 👉 On utilise le WebSocket global créé dans _LayoutIA via chat-socket.js
+            const chatSocket = window.RetroGalerieSocket;
 
-        function appendMessage(text, role) {
-            const row = document.createElement("div");
-            row.className = "message-row " + role;
+            function appendMessage(text, role) {
+                const row = document.createElement("div");
+                row.className = "message-row " + role;
 
-            const bubble = document.createElement("div");
-            bubble.className = "bubble " + role;
-            bubble.textContent = text;
+                const bubble = document.createElement("div");
+                bubble.className = "bubble " + role;
+                bubble.textContent = text;
 
-            row.appendChild(bubble);
-            messagesEl.appendChild(row);
-            messagesEl.scrollTop = messagesEl.scrollHeight;
-        }
-
-        function connectSocket() {
-            socket = new WebSocket(`wss://${window.location.host}/ws/chat`);
-
-            socket.onopen = () => {
-                statusEl.textContent = "Connecté.";
-            };
-
-            socket.onmessage = (event) => {
-                appendMessage(event.data, "ai");
-            };
-
-            socket.onclose = () => {
-                statusEl.textContent = "Déconnecté. Reconnexion...";
-                setTimeout(connectSocket, 2000);
-            };
-
-            socket.onerror = () => {
-                statusEl.textContent = "Erreur WebSocket.";
-            };
-        }
-
-        connectSocket();
-
-        sendBtn.addEventListener("click", () => {
-            const q = inputEl.value.trim();
-            if (!q || !socket || socket.readyState !== WebSocket.OPEN) return;
-
-            appendMessage(q, "user");
-            inputEl.value = "";
-            statusEl.textContent = "En cours...";
-            socket.send(q);
-        });
-
-        inputEl.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                sendBtn.click();
+                row.appendChild(bubble);
+                messagesEl.appendChild(row);
+                messagesEl.scrollTop = messagesEl.scrollHeight;
             }
-        });
+
+            // 👉 Réception des messages IA
+            chatSocket.onMessage((msg) => {
+                appendMessage(msg, "ai");
+                statusEl.textContent = "Prêt.";
+            });
+
+            // 👉 Envoi des messages utilisateur
+            sendBtn.addEventListener("click", () => {
+                const q = inputEl.value.trim();
+                if (!q) return;
+
+                console.log("📤 Envoi du message");
+                appendMessage(q, "user");
+                inputEl.value = "";
+                statusEl.textContent = "En cours...";
+                chatSocket.send(q);
+            });
+
+            inputEl.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendBtn.click();
+                }
+            });
     </script>
 </body>
 </html>

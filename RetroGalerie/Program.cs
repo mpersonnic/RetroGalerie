@@ -12,6 +12,8 @@ using RetroGalerie.Models.Mapping;
 using RetroGalerie.Models.Mapping.Interface;
 using RetroGalerie.Services;
 using System.Globalization;
+using System.Net.WebSockets;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,9 +52,6 @@ builder.Services.AddScoped<IRetrievalService, RetrievalService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 
-// 👉 Service IA (ton ChatService)
-builder.Services.AddScoped<IChatService, ChatService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -80,7 +79,6 @@ var supportedCultures = new[]
     new CultureInfo("fr")
 };
 
-// Ajout du CookieRequestCultureProvider pour gérer le sélecteur
 var localizationOptions = new RequestLocalizationOptions
 {
     DefaultRequestCulture = new RequestCulture("fr"),
@@ -91,10 +89,10 @@ localizationOptions.RequestCultureProviders.Insert(0, new CookieRequestCulturePr
 
 app.UseRequestLocalization(localizationOptions);
 
-// 👉 Activer les WebSockets AVANT de les mapper
+// Activer les WebSockets
 app.UseWebSockets();
 
-// 👉 Endpoint WebSocket IA
+// Endpoint WebSocket IA
 app.Map("/ws/chat", async context =>
 {
     if (!context.WebSockets.IsWebSocketRequest)
@@ -108,29 +106,47 @@ app.Map("/ws/chat", async context =>
 
     var buffer = new byte[1024 * 4];
 
-    while (webSocket.State == System.Net.WebSockets.WebSocketState.Open)
+    while (webSocket.State == WebSocketState.Open)
     {
-        var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+        WebSocketReceiveResult result;
 
-        if (result.MessageType == System.Net.WebSockets.WebSocketMessageType.Close)
+        try
         {
-            await webSocket.CloseAsync(
-                System.Net.WebSockets.WebSocketCloseStatus.NormalClosure,
-                "Closing",
-                CancellationToken.None
-            );
+            result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+        }
+        catch (WebSocketException)
+        {
+            // Le client a quitté la page → la socket est déjà fermée/aborted
             break;
         }
 
-        var question = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
+        if (result.MessageType == WebSocketMessageType.Close)
+        {
+            if (webSocket.State == WebSocketState.Open ||
+                webSocket.State == WebSocketState.CloseReceived)
+            {
+                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+            }
+            break;
+        }
+
+        using var ms = new MemoryStream();
+        ms.Write(buffer, 0, result.Count);
+
+        while (!result.EndOfMessage)
+        {
+            result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            ms.Write(buffer, 0, result.Count);
+        }
+
+        var question = Encoding.UTF8.GetString(ms.ToArray());
 
         var response = await chatService.ProcessAsync(new ChatRequest(question));
-
-        var answerBytes = System.Text.Encoding.UTF8.GetBytes(response.Answer);
+        var answerBytes = Encoding.UTF8.GetBytes(response.Answer);
 
         await webSocket.SendAsync(
             new ArraySegment<byte>(answerBytes),
-            System.Net.WebSockets.WebSocketMessageType.Text,
+            WebSocketMessageType.Text,
             true,
             CancellationToken.None
         );
