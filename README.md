@@ -1,9 +1,9 @@
-## 🟪 RetroGalerie — ASP.NET MVC + Razor (Clean Architecture légère)
+## 🟪 RetroGalerie — ASP.NET MVC + Razor (Clean Architecture légère) + Chat IA (Ollama)
 **Lien :** https://github.com/mpersonnic/RetroGalerie
 
-Application ASP.NET MVC avec Razor Views, orientée **gestion de collections de jeux rétro**.  
+Application ASP.NET MVC (.Net 10) avec Razor Views, orientée **gestion de collections de jeux rétro**.  
 Le projet met l’accent sur une architecture claire, une UI dynamique côté serveur et une logique métier explicite.
-Il reste à développer la partie "jeux que souhaite voir entrer la collection".
+Outre la collection de jeux possédés, l'appli permet de saisir les "jeux que souhaite voir entrer la collection".
 
 ### Points clés
 - **ASP.NET MVC + Razor** : rendu serveur, vues fortement typées, logique claire et maintenable  
@@ -19,14 +19,54 @@ Il reste à développer la partie "jeux que souhaite voir entrer la collection".
   - cartes Bootstrap avec images, titres, navigation  
   - gestion d’état (collapse ouvert/fermé) via JS
 
-### Exemple de logique métier affichée dans la vue
-- Calcul du total général :  
-  `var totalJeux = Model.Consoles.Sum(c => c.GameCount);`
-- Affichage dynamique des jeux par console  
-- Indicateur visuel d’état (flèche qui pivote, ligne active)  
-- Séparation claire entre données, présentation et interactions
-- Création des jeux souhaités (à venir)
-- Création d'une couche de service pour ne pas mettre tout le code dans les controllers
-  
+# RetroGalerie : Chatbot IA:
+
+RetroGalerie.AI est une API IA en **.NET 8 Minimal API** qui combine :
+- un modèle IA local via **Ollama**
+- un système de **RAG (Retrieval-Augmented Generation)** connecté à la base RetroGalerie
+
+L’objectif : permettre un chatbot capable de répondre avec précision sur les jeux rétro présent dans la collection: listes de jeux, consoles, variantes FRA, états, éditions, etc.
+
+---
+
+## ✨ Fonctionnalités
+
+- Chat IA (modèle local Ollama)
+- **RAG** : recherche dans la base RetroGalerie + génération IA
+- Architecture propre : Domain / Application / Infrastructure / API
+- Endpoints Minimal API
+
+---
+
+## 🔍 RAG : comment ça marche?
+
+1. L’utilisateur pose une question  
+2. Le service de retrieval analyse la requête  
+3. Recherche dans la base RetroGalerie (EF Core)  
+4. Les données trouvées sont injectées dans le prompt  
+5. Le modèle IA génère une réponse enrichie et exacte
+
+Ce mécanisme permet d’éviter les hallucinations et de fournir des réponses basées sur les données réelles du projet.
+## Installation
+
+### 1. Installer Ollama
+ - **Lien :** https://ollama.com/download
+ - Lancer `ollama pull llama3` dans un terminal afin de récupérer un modèle LLM
+
+
+### 2. Configurer l’API
+Modifier `appsettings.json` :
+
+```json
+{
+  "Ollama": {
+    "BaseUrl": "http://localhost:11434",
+    "Model": "llama3"
+  },
+  "ConnectionStrings": {
+    "RetroGalerie": "Server=...;Database=RetroGalerie;..."
+  }
+}
+```
 Ce projet illustre une approche **simple et orientée métier** :  
 livrer vite, clarifier le domaine, éviter la complexité inutile, et garder une UI lisible et efficace.
