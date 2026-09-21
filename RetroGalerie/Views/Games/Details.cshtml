@@ -8,12 +8,32 @@
 <h1 class="mb-3">
     @switch (Model.ConsoleName?.Trim().ToUpperInvariant())
     {
-        case "NES" or "GAME GEAR":
+        case "NES":
             <img src="/images/logo/nes-logo.png" alt="NES Logo"
                  style="height:40px; vertical-align:middle; margin-right:10px;" />
             break;
         case "SNES":
             <img src="/images/logo/snes_logo.png" alt="SNES Logo"
+                 style="height:40px; vertical-align:middle; margin-right:10px;" />
+            break;
+        case "GAME GEAR":
+            <img src="/images/logo/Sega_Game_Gear_logo.png" alt="Game Gear Logo"
+                 style="height:40px; vertical-align:middle; margin-right:10px;" />
+            break;
+        case "MEGADRIVE":
+            <img src="/images/logo/Megadrive_logo.png" alt="Megadrive Logo"
+                 style="height:40px; vertical-align:middle; margin-right:10px;" />
+            break;
+        case "XBOX 360":
+            <img src="/images/logo/Xbox360_logo.png" alt="Xbox 360 Logo"
+                 style="height:40px; vertical-align:middle; margin-right:10px;" />
+            break;
+        case "PLAYSTATION 2":
+            <img src="/images/logo/PS2_Logo.png" alt="PS2 Logo"
+                 style="height:40px; vertical-align:middle; margin-right:10px;" />
+            break;
+        case "NINTENDO 64":
+            <img src="/images/logo/Nintendo64_logo.jpg" alt="Nintendo 64 Logo"
                  style="height:40px; vertical-align:middle; margin-right:10px;" />
             break;
     }
