@@ -76,7 +76,7 @@ public class RetrievalService : IRetrievalService
                 .Replace(":", "")
                 .Replace("-", "")
                 .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                .Where(w => w.Length > 2) // éviter "of", "the", etc.
+                .Where(w => w.Length > 3) // éviter "of", "the", etc.
                 .Distinct()
                 .ToList();
 
